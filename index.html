@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>فرودگاه | فروش گجت</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      direction: rtl;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: linear-gradient(90deg, #ff5722, #ff9800);
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    nav {
+      background: #333;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      color: #ff9800;
+    }
+    main {
+      padding: 20px;
+    }
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .product {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+    }
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: red;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 5px 8px;
+    }
+    form {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      margin-top: 20px;
+    }
+    form input, form textarea, form button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    footer {
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>فرودگاه ✈️ | فروش گجت</h1>
+  </header>
+  <nav>
+    <a href="#home">خانه</a>
+    <a href="#signup">ثبت نام</a>
+    <a href="#contact">تماس با من</a>
+  </nav>
+  <main id="home">
+    <h2>محصولات</h2>
+    <div class="product-list" id="product-list"></div>
+
+    <form id="add-product-form">
+      <h3>➕ افزودن محصول</h3>
+      <input type="text" id="product-name" placeholder="نام محصول" required>
+      <input type="text" id="product-img" placeholder="لینک عکس محصول" required>
+      <button type="submit">افزودن</button>
+    </form>
+  </main>
+
+  <main id="signup">
+    <h2>ثبت نام</h2>
+    <form>
+      <input type="text" placeholder="نام کامل" required>
+      <input type="email" placeholder="ایمیل" required>
+      <input type="password" placeholder="رمز عبور" required>
+      <button type="submit">ثبت نام</button>
+    </form>
+  </main>
+
+  <main id="contact">
+    <h2>تماس با من</h2>
+    <form name="contact" method="POST" data-netlify="true" netlify>
+      <input type="hidden" name="form-name" value="contact">
+      <p style="display:none">
+        <label>اگر رباتی پر نکن: <input name="bot-field"></label>
+      </p>
+      <input type="text" name="name" placeholder="نام شما" required>
+      <input type="email" name="email" placeholder="ایمیل شما" required>
+      <textarea name="message" rows="4" placeholder="پیام شما" required></textarea>
+      <button type="submit">ارسال</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>© 2025 فرودگاه | ساخته شده با عشق 💙</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById("add-product-form");
+    const productList = document.getElementById("product-list");
+
+    // بارگذاری محصولات از localStorage
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    function renderProducts() {
+      productList.innerHTML = "";
+      products.forEach((p, index) => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <button class="remove-btn" onclick="removeProduct(${index})">❌</button>
+          <img src="${p.img}" alt="${p.name}">
+          <h4>${p.name}</h4>
+        `;
+        productList.appendChild(div);
+      });
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const name = document.getElementById("product-name").value;
+      const img = document.getElementById("product-img").value;
+      products.push({ name, img });
+      localStorage.setItem("products", JSON.stringify(products));
+      renderProducts();
+      form.reset();
+    });
+
+    function removeProduct(index) {
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      renderProducts();
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>
